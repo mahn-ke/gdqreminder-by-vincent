@@ -79,7 +79,7 @@ export default class Firebase {
 
         const firebaseMessage = {
             notification: {
-                title: `New GDQ event announced: ${event.short}!`,
+                title: `New GDQ event announced: ${event.short.toUpperCase()}!`,
                 body: "Tap to set your reminders!"
             },
             android: {
