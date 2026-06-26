@@ -41,14 +41,29 @@ export default class Firebase {
         const topic = `event.announcement`;
 
         const now = new Date();
-        const startTime = new Date(run.start);
+        const runStart = run.startTime ?? run.start;
+        const startTime = new Date(runStart);
         const diffMs = startTime - now;
-        const diffHours = Math.max(0, Math.round(diffMs / (1000 * 60 * 60)));
+        const diffHours = Number.isNaN(diffMs)
+            ? 0
+            : Math.max(0, Math.round(diffMs / (1000 * 60 * 60)));
+        const isMoreThan48HoursAway = !Number.isNaN(diffMs) && diffMs > (48 * 60 * 60 * 1000);
+        const startAtText = startTime.toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+        });
+        const startDayText = startTime.toLocaleDateString('en-US', {
+            weekday: 'long',
+        });
+        const body = isMoreThan48HoursAway
+            ? `Starting at ${startAtText} on ${startDayText} - set a reminder now!`
+            : `Starting in ${diffHours} hour${diffHours !== 1 ? 's' : ''} - set a reminder now!`;
 
         const firebaseMessage = {
             notification: {
                 title: `New GDQ run added: ${run.display_name}!`,
-                body: `Starting in ${diffHours} hour${diffHours !== 1 ? 's' : ''} - set a reminder now!`
+                body,
             },
             android: {
                 notification: {
