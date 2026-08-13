@@ -107,3 +107,6 @@ dist
 .env
 firebase.json
 firebase/
+
+# MacOS
+.DS_Store
