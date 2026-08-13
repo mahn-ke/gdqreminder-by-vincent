@@ -2,9 +2,9 @@ import { Twitch } from '../../services/twitch.js';
 import { FakeHTTPClient } from "../stubs/fakeHTTPClient";
 import { RealTimeProvider } from '../../services/timeProvider/realTimeProvider.js';
 import { expect } from '@jest/globals';
-import { MetricsProvider } from '../../metrics/metricsProvider.js';
+import { ApiProxyMetricsServer } from '../../metrics/apiProxyMetricsServer.js';
 
-const metricsProvider = new MetricsProvider();
+const metricsProvider = new ApiProxyMetricsServer();
 let twitch;
 
 beforeAll(async () => {
@@ -61,7 +61,7 @@ describe("twitch", () => {
         }
     ].forEach(({ testName, mockData }) => {
         it(testName, async () => {
-            const metricsProvider = new MetricsProvider();
+            const metricsProvider = new ApiProxyMetricsServer();
             const offline = new Twitch(new FakeHTTPClient(mockData), new RealTimeProvider(), "", null, metricsProvider);
             await offline.fetchTitle(); // warm up cache
 

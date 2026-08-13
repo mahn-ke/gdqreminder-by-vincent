@@ -8,7 +8,7 @@ import got from 'got';
 import { Twitch } from './services/twitch.js'
 import winston from 'winston'
 import { SeqTransport } from '@datalust/winston-seq'
-import { MetricsProvider } from './metrics/metricsProvider.js';
+import { ApiProxyMetricsServer } from './metrics/apiProxyMetricsServer.js';
 
 initializeApp();
 
@@ -87,7 +87,7 @@ const startup = async (logger, config) => {
     firebase.sendRunAddedNotification(run);
   };
 
-  const metricsProvider = new MetricsProvider(logger, 9000);
+  const metricsProvider = new ApiProxyMetricsServer(logger, 9000);
 
   const instance = got.extend({
     hooks: {
