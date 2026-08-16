@@ -5,9 +5,6 @@ services:
   app:
     image: ghcr.io/mahn-ke/gdqreminder-by-vincent:latest
     restart: on-failure:5
-    labels:
-      prometheus.scrape: "true"
-      prometheus.port: "9000"
     command:
       - --refreshIntervalInMS=60000
       - --seqHost=${SEQ_HOST}
@@ -19,9 +16,6 @@ services:
       - DISCORD_WEBHOOK=${DISCORD_WEBHOOK}
       - SEQ_HOST=${SEQ_HOST}
       - SEQ_API_KEY=${SEQ_API_KEY}
-    networks:
-      - default
-      - prometheus
 
   nginx:
     image: nginx:alpine
@@ -33,6 +27,12 @@ services:
       - nginx_cache:/var/cache/nginx/tracker
     depends_on:
       - app
+    labels:
+      prometheus.scrape: "true"
+      prometheus.port: "3018"
+    networks:
+      - default
+      - prometheus
 
 volumes:
   nginx_cache:
