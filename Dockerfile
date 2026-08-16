@@ -8,4 +8,6 @@ WORKDIR /app
 COPY ./app /app
 RUN apk add --no-cache curl \
     && npm ci --omit=dev
-CMD ["npm", "run", "start"]
+EXPOSE 9000
+ENTRYPOINT ["npm", "run", "start", "--"]
+CMD ["--refreshIntervalInMS=60000"]

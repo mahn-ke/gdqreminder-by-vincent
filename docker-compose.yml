@@ -5,13 +5,20 @@ services:
   app:
     image: ghcr.io/mahn-ke/gdqreminder-by-vincent:latest
     restart: on-failure:5
+    command:
+      - --refreshIntervalInMS=60000
+      - --seqHost=${SEQ_HOST}
+      - --seqAPIKey=${SEQ_API_KEY}
     environment:
-      - PORT=3018
       - GOOGLE_APPLICATION_CREDENTIALS=/firebase/firebase.json
+      - TWITCH_CLIENT_ID=${TWITCH_CLIENT_ID}
+      - DISCORD_WEBHOOK=${DISCORD_WEBHOOK}
+      - SEQ_HOST=${SEQ_HOST}
+      - SEQ_API_KEY=${SEQ_API_KEY}
     ports:
-      - "3018:3000"
+      - "3018:9000"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3018/healthz"]
+      test: ["CMD", "curl", "-f", "http://localhost:9000/metrics"]
       interval: 30s
       timeout: 10s
       retries: 5
