@@ -17,8 +17,3 @@ services:
       - SEQ_API_KEY=${SEQ_API_KEY}
     ports:
       - "3018:9000"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/metrics"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
