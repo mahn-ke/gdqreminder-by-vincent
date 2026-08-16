@@ -19,10 +19,9 @@ export class DataContainer
   #timeProvider = null;
   #onNextRunStarted = null;
   #onNewRunAdded = null;
-  #onCacheHit = null;
   #twitch = null;
 
-  constructor(logger, httpClient, timeProvider, twitch, onNextRunStarted, metricsProvider, onNewRunAdded)
+  constructor(logger, httpClient, timeProvider, twitch, onNextRunStarted, onNewRunAdded)
   {
     if (logger)
     {
@@ -31,7 +30,6 @@ export class DataContainer
     this.#httpClient = httpClient;
     this.#timeProvider = timeProvider;
     this.#onNextRunStarted = onNextRunStarted;
-    this.#onCacheHit = metricsProvider?.addCacheHit?.bind(metricsProvider);
     this.#twitch = twitch;
     this.#onNewRunAdded = onNewRunAdded;
   }
@@ -61,7 +59,6 @@ export class DataContainer
     let runs = null;
     if (cached && (now - cached.timestamp < this.#cacheTTL)) {
       runs = cached.data;
-      this.#onCacheHit?.(`http://nginx/proxy/tracker/api/v2/events/${eventID}/runs/`);
     } else {
       runs = (await this.#httpClient.get(`http://nginx/proxy/tracker/api/v2/events/${eventID}/runs/`).json()).results;
       this.#data._runsCache[cacheKey] = { data: structuredClone(runs), timestamp: now };

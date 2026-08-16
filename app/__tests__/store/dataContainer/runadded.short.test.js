@@ -24,7 +24,6 @@ describe("dataContainer", () => {
                 fakeTimeProvider,
                 new Twitch(fakeHTTPClient, fakeTimeProvider),
                 () => { },
-                {},
                 emissionMethod
             );
 

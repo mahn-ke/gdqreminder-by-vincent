@@ -101,19 +101,13 @@ const startup = async (logger, config) => {
         response => {
           const startTime = response.request.options.context?.startTime;
           metricsProvider.addRequestTime(response.url, timeProvider.getCurrent().getTime() - startTime);
-          const cacheStatus = response.headers['x-cache-status'];
-          if (cacheStatus === 'HIT' || cacheStatus === 'UPDATING') {
-            metricsProvider.addCacheHit(response.url);
-          } else {
-            metricsProvider.addCacheMiss(response.url);
-          }
           return response;
         }
       ]
     },
   });
   
-  const dataContainer = new DataContainer(logger, instance, timeProvider, new Twitch(instance, timeProvider, process.env.TWITCH_CLIENT_ID, logger, metricsProvider), onNextRunStarted, metricsProvider, onNewRunAdded);
+  const dataContainer = new DataContainer(logger, instance, timeProvider, new Twitch(instance, timeProvider, process.env.TWITCH_CLIENT_ID, logger, metricsProvider), onNextRunStarted, onNewRunAdded);
   const eventTracker = new EventTracker(logger, instance, timeProvider, onNextEventScheduleReleased);
   
   await Promise.all([
