@@ -1,0 +1,36 @@
+name: Coverage
+
+on:
+  - push
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ['lts/*', 'latest']
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v7
+      with:
+        fetch-depth: 2
+
+    - name: Set up Node.js ${{ matrix.node }}
+      uses: actions/setup-node@v7
+      with:
+        node-version: ${{ matrix.node }}
+
+    - name: Install dependencies
+      working-directory: app
+      run: npm ci
+
+    - name: Run the tests
+      working-directory: app
+      run: npm test -- --coverage
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v7
+      if: ${{ matrix.node }} == 'lts/*'
+      with:
+          token: ${{ secrets.CODECOV_TOKEN }}

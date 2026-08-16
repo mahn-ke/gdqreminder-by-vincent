@@ -1,0 +1,17 @@
+#http
+version: "3.8"
+
+services:
+  app:
+    image: ghcr.io/mahn-ke/gdqreminder-backend:latest
+    restart: on-failure:5
+    environment:
+      - PORT=3018
+      - GOOGLE_APPLICATION_CREDENTIALS=/firebase/firebase.json
+    ports:
+      - "3018:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3018/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
