@@ -38,7 +38,7 @@ export class DataContainer
 
   async getAllEvents() 
   {
-    let events = (await this.#httpClient.get("https://tracker.gamesdonequick.com/tracker/api/v2/events").json()).results.filter(e=>e.short.toLowerCase().includes("gdq"));
+    let events = (await this.#httpClient.get(`http://nginx/proxy/tracker/api/v2/events`).json()).results.filter(e=>e.short.toLowerCase().includes("gdq"));
     events = events.map(event => {
       event.short = event.short.toLowerCase();
       event.startTime = new Date(event.datetime);
@@ -61,9 +61,9 @@ export class DataContainer
     let runs = null;
     if (cached && (now - cached.timestamp < this.#cacheTTL)) {
       runs = cached.data;
-      this.#onCacheHit?.(`https://tracker.gamesdonequick.com/tracker/api/v2/events/${eventID}/runs/`);
+      this.#onCacheHit?.(`http://nginx/proxy/tracker/api/v2/events/${eventID}/runs/`);
     } else {
-      runs = (await this.#httpClient.get(`https://tracker.gamesdonequick.com/tracker/api/v2/events/${eventID}/runs/`).json()).results;
+      runs = (await this.#httpClient.get(`http://nginx/proxy/tracker/api/v2/events/${eventID}/runs/`).json()).results;
       this.#data._runsCache[cacheKey] = { data: structuredClone(runs), timestamp: now };
     }
 

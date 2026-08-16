@@ -101,7 +101,12 @@ const startup = async (logger, config) => {
         response => {
           const startTime = response.request.options.context?.startTime;
           metricsProvider.addRequestTime(response.url, timeProvider.getCurrent().getTime() - startTime);
-          metricsProvider.addCacheMiss(response.url);
+          const cacheStatus = response.headers['x-cache-status'];
+          if (cacheStatus === 'HIT' || cacheStatus === 'UPDATING') {
+            metricsProvider.addCacheHit(response.url);
+          } else {
+            metricsProvider.addCacheMiss(response.url);
+          }
           return response;
         }
       ]

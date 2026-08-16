@@ -24,7 +24,7 @@ export class EventTracker {
         this.#initialLoop = false;
 
         this.#logger.info("[EVENT-LOOP] Fetching events");
-        const eventRequest = await this.#httpClient.get("https://tracker.gamesdonequick.com/tracker/api/v2/events", {throwHttpErrors: false});
+        const eventRequest = await this.#httpClient.get(`http://nginx/proxy/tracker/api/v2/events`, {throwHttpErrors: false});
         if (eventRequest.statusCode !== 200) {
             this.#logger.error("[EVENT-LOOP] Failed to fetch events: " + eventRequest.statusCode + "\n" + eventRequest.body);
             return;
@@ -44,7 +44,7 @@ export class EventTracker {
         }
 
         // fetch https://tracker.gamesdonequick.com/tracker/api/v2/events/{id}/runs; if 200, get .results.length, call onNextEventScheduleAvailable with .short
-        const eventRunsRequest = await this.#httpClient.get(`https://tracker.gamesdonequick.com/tracker/api/v2/events/${event.id}/runs`, {throwHttpErrors: false});
+        const eventRunsRequest = await this.#httpClient.get(`http://nginx/proxy/tracker/api/v2/events/${event.id}/runs`, {throwHttpErrors: false});
         if (eventRunsRequest.statusCode !== 200) {
             this.#logger.info("[EVENT-LOOP] No event runs available yet: " + eventRunsRequest.statusCode + "\n" + eventRunsRequest.body);
             return;

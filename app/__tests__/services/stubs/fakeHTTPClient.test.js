@@ -2,7 +2,7 @@ import { FakeHTTPClient, PrefixEmptyError } from '../../stubs/fakeHTTPClient';
 
 describe("FakeHTTPClient", () => {
     test(`[EVENTS] can read files`, async () => {
-        const request = new FakeHTTPClient("during-preshow").get("https://tracker.gamesdonequick.com/tracker/api/v2/events");
+        const request = new FakeHTTPClient("during-preshow").get("http://nginx/proxy/tracker/api/v2/events");
         const content = await request.json();
         expect(content.count).toBe(36);
     });
@@ -14,7 +14,7 @@ describe("FakeHTTPClient", () => {
     };
     Object.entries(events).forEach(([eventID, runCount]) => {
         test(`[${eventID}] can read files`, async () => {
-            const request = new FakeHTTPClient("during-preshow").get("https://tracker.gamesdonequick.com/tracker/api/v2/events/" + eventID + "/runs/");
+            const request = new FakeHTTPClient("during-preshow").get("http://nginx/proxy/tracker/api/v2/events/" + eventID + "/runs/");
             const content = await request.json();
             expect(content.count).toBe(runCount);
         });
