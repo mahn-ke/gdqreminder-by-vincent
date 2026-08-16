@@ -1,5 +1,5 @@
 {
-  "name": "gdqreminder-backend",
+  "name": "gdqreminder-by-vincent",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ViMaSter/gdqreminder-backend.git"
+    "url": "git+https://github.com/mahn-ke/gdqreminder-by-vincent.git"
   },
   "engines": {
     "npm": ">=8.5.0",
@@ -19,9 +19,9 @@
   "author": "Vincent Mahnke (vincent@mahn.ke)",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/ViMaSter/gdqreminder-backend/issues"
+    "url": "https://github.com/mahn-ke/gdqreminder-by-vincent/issues"
   },
-  "homepage": "https://github.com/ViMaSter/gdqreminder-backend#readme",
+  "homepage": "https://github.com/mahn-ke/gdqreminder-by-vincent#readme",
   "dependencies": {
     "@datalust/winston-seq": "^3.0.1",
     "express": "^5.2.1",

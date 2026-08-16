@@ -25,7 +25,7 @@ const setupLogger = (config) =>
   
   const logger = winston.createLogger({
     exitOnError: true,
-    defaultMeta: { application: 'gdqreminder-backend' },
+    defaultMeta: { application: 'gdqreminder-by-vincent' },
     transports,
     level: "info",
     format: winston.format.combine(  /* This is required to get errors to log with stack traces. See https://github.com/winstonjs/winston/issues/1498 */

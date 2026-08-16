@@ -1,4 +1,4 @@
-# Backend for [GDQReminder App](https://github.com/mahn-ke/gdqreminder-mobile/) [![codecov](https://codecov.io/gh/mahn-ke/gdqreminder-backend/branch/main/graph/badge.svg?token=0CRSIRXAS1)](https://codecov.io/gh/mahn-ke/gdqreminder-backend)
+# Backend for [GDQReminder App](https://github.com/mahn-ke/gdqreminder-mobile/) [![codecov](https://codecov.io/gh/mahn-ke/gdqreminder-by-vincent/branch/main/graph/badge.svg?token=0CRSIRXAS1)](https://codecov.io/gh/mahn-ke/gdqreminder-by-vincent)
 
 # Quickstart using Docker
 1. Create a new folder (this README will refer to this folder as `$ROOT`)
@@ -11,7 +11,7 @@
 5. Replace `[YOUR_GRAPHQL_TWITCH_CLIENT_ID]` with a client ID that has access to Twitch's GraphQL API
 6. Run 
    ```ps
-     docker run --name gdqreminder-backend -d --restart unless-stopped -v $(pwd):/firebase --env-file ./.env ghcr.io/mahn-ke/gdqreminder-backend:main --refreshIntervalInMS=60000
+     docker run --name gdqreminder-by-vincent -d --restart unless-stopped -v $(pwd):/firebase --env-file ./.env ghcr.io/mahn-ke/gdqreminder-by-vincent:main --refreshIntervalInMS=60000
    ```
 8. Optionally, the app supports logging to a [Seq](https://datalust.co/seq) instance. To enable it, add the following parameters to the end of the command outlined in the step above
    1. `--seqHost=` and append the full path to your HTTP ingest host (for example: `https://example.org:5341`)

@@ -174,14 +174,14 @@ const relocateFiles = async () => {
 
     /*
     replace:
-    /workspaces/gdqreminder-backend/__tests__/fixtures/during-preshow/GET/gamesdonequick.com/tracker/api/v1/search/type_event.json
+    /workspaces/gdqreminder-by-vincent/__tests__/fixtures/during-preshow/GET/gamesdonequick.com/tracker/api/v1/search/type_event.json
     with:
-    /workspaces/gdqreminder-backend/__tests__/fixtures/during-preshow/GET/gamesdonequick.com/tracker/api/v2/events.json
+    /workspaces/gdqreminder-by-vincent/__tests__/fixtures/during-preshow/GET/gamesdonequick.com/tracker/api/v2/events.json
 
     and replace:
-    /workspaces/gdqreminder-backend/__tests__/fixtures/during-preshow/GET/gamesdonequick.com/tracker/api/v1/search/type_run_eventshort_agdq2022.json
+    /workspaces/gdqreminder-by-vincent/__tests__/fixtures/during-preshow/GET/gamesdonequick.com/tracker/api/v1/search/type_run_eventshort_agdq2022.json
     with:
-    /workspaces/gdqreminder-backend/__tests__/fixtures/during-preshow/GET/gamesdonequick.com/tracker/api/v2/events/37/runs.json
+    /workspaces/gdqreminder-by-vincent/__tests__/fixtures/during-preshow/GET/gamesdonequick.com/tracker/api/v2/events/37/runs.json
     /
     */
     let newNames = files.map(file => {
