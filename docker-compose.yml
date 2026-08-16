@@ -29,7 +29,7 @@ services:
       - app
     labels:
       prometheus.scrape: "true"
-      prometheus.port: "3018"
+      prometheus.port: "80"
     networks:
       - default
       - prometheus
