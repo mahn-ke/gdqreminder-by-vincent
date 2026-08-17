@@ -2,7 +2,7 @@
 version: "3.8"
 
 x-nginx:
-  cors_allow_origin: "http://localhost:4437"
+  cors_allow_origin: "http://localhost:4437, capacitor://localhost, http://localhost"
   cors_allow_credentials: "true"
   cors_allow_methods: "GET, OPTIONS"
   cors_allow_headers: "Content-Type, Authorization"
