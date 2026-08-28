@@ -1,10 +1,29 @@
 import { getMessaging } from 'firebase-admin/messaging';
+import { constants } from 'node:fs';
+import { access } from 'node:fs/promises';
 
 export default class Firebase {
     #logger = null;
     constructor(logger)
     {
         this.#logger = logger;
+    }
+    async validateConnection() {
+        const credentialsPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+
+        try {
+            if (!credentialsPath) {
+                throw new Error('GOOGLE_APPLICATION_CREDENTIALS is not set');
+            }
+
+            await access(credentialsPath, constants.R_OK);
+            await getMessaging().send({ topic: 'firebase.startup.validation' }, true);
+            this.#logger.info('[FIREBASE] Credential file and Firebase connection validated');
+            return true;
+        } catch (error) {
+            this.#logger.error('[FIREBASE] Startup validation failed: {error}', { error });
+            return false;
+        }
     }
     sendRunStartNotification(run, reason) {
         const topic = `run.start.${run.id}`;

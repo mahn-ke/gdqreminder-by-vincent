@@ -73,6 +73,7 @@ const startup = async (logger, config) => {
   }
 
   const firebase = new Firebase(logger);
+  await firebase.validateConnection();
 
   const onNextRunStarted = (run, reason) => {
     logger.info("[EMISSION] run start: {id}", run);

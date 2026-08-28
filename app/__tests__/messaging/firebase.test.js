@@ -1,9 +1,14 @@
 import { expect, jest } from '@jest/globals';
 
 const sendMock = jest.fn().mockResolvedValue('ok');
+const accessMock = jest.fn().mockResolvedValue();
 
 jest.unstable_mockModule('firebase-admin/messaging', () => ({
   getMessaging: () => ({ send: sendMock }),
+}));
+
+jest.unstable_mockModule('node:fs/promises', () => ({
+  access: accessMock,
 }));
 
 const { default: Firebase } = await import('../../messaging/firebase.js');
@@ -11,6 +16,7 @@ const { default: Firebase } = await import('../../messaging/firebase.js');
 describe('Firebase.sendRunAddedNotification', () => {
   beforeEach(() => {
     sendMock.mockClear();
+    accessMock.mockClear();
     jest.useFakeTimers();
     jest.setSystemTime(new Date('2026-07-09T01:31:07.729Z'));
   });
@@ -55,5 +61,40 @@ describe('Firebase.sendRunAddedNotification', () => {
     const sentMessage = sendMock.mock.calls[0][0];
     expect(sentMessage.notification.body).toMatch(/^Starting at \d{1,2}:\d{2} [AP]M on [A-Za-z]+ - set a reminder now!$/);
     expect(sentMessage.notification.body).not.toContain('Starting in');
+  });
+});
+
+describe('Firebase.validateConnection', () => {
+  const credentialsPath = '/firebase/firebase.json';
+
+  beforeEach(() => {
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = credentialsPath;
+    sendMock.mockClear();
+    accessMock.mockClear();
+    sendMock.mockResolvedValue('ok');
+    accessMock.mockResolvedValue();
+  });
+
+  it('checks the credential file and performs a non-delivering Firebase request', async () => {
+    const logger = { info: jest.fn(), error: jest.fn() };
+    const firebase = new Firebase(logger);
+
+    await expect(firebase.validateConnection()).resolves.toBe(true);
+
+    expect(accessMock).toHaveBeenCalledWith(credentialsPath, expect.any(Number));
+    expect(sendMock).toHaveBeenCalledWith({ topic: 'firebase.startup.validation' }, true);
+    expect(logger.info).toHaveBeenCalledWith('[FIREBASE] Credential file and Firebase connection validated');
+  });
+
+  it('logs a credential validation failure and allows startup to continue', async () => {
+    const error = new Error('ENOENT: no such file or directory');
+    const logger = { info: jest.fn(), error: jest.fn() };
+    accessMock.mockRejectedValue(error);
+    const firebase = new Firebase(logger);
+
+    await expect(firebase.validateConnection()).resolves.toBe(false);
+
+    expect(sendMock).not.toHaveBeenCalled();
+    expect(logger.error).toHaveBeenCalledWith('[FIREBASE] Startup validation failed: {error}', { error });
   });
 });
