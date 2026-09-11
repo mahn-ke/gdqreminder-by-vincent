@@ -9,7 +9,7 @@ x-nginx:
 
 services:
   app:
-    image: ghcr.io/mahn-ke/gdqreminder-by-vincent:latest
+    image: ghcr.io/mahn-ke/gdqreminder-by-vincent:latest@sha256:07c8b1e1ae31fe9499ef795fb9ec9da901ba81ba4d3dea33d774043af152c253
     restart: on-failure:5
     command:
       - --refreshIntervalInMS=60000
