@@ -60,7 +60,16 @@ export class DataContainer
     if (cached && (now - cached.timestamp < this.#cacheTTL)) {
       runs = cached.data;
     } else {
-      runs = (await this.#httpClient.get(`http://nginx/proxy/tracker/api/v2/events/${eventID}/runs/`).json()).results;
+      const url = `http://nginx/proxy/tracker/api/v2/events/${eventID}/runs/`;
+      const response = await this.#httpClient.get(url, {throwHttpErrors: false});
+      if (response.statusCode === 404 && !(this.#data.events[eventID]?.runsInOrder?.length > 0)) {
+        this.#logger?.info(`[RUN-LOOP] No runs available yet for event ${eventID}`);
+        runs = [];
+      } else if (response.statusCode !== 200) {
+        throw new Error(`Request failed with status code ${response.statusCode}: GET ${url}`);
+      } else {
+        runs = JSON.parse(response.body).results;
+      }
       this.#data._runsCache[cacheKey] = { data: structuredClone(runs), timestamp: now };
     }
 
@@ -299,7 +308,11 @@ export class DataContainer
       let nextRunEventID = this.#data.runsWithEventID[nextRunID].eventID;
       if (relevantEvent.id != nextRunEventID)
       {
-        nextRunID = relevantEvent.runsInOrder.at(0).id;
+        nextRunID = relevantEvent.runsInOrder.at(0)?.id;
+        if (!nextRunID)
+        {
+          return null;
+        }
         break;
       }
       const eventIDOfLastTrackedRun = this.#data.events[nextRunEventID];

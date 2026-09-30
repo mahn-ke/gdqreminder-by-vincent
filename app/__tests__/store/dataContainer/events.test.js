@@ -112,4 +112,40 @@ describe("dataContainer", () => {
             expect((await dataContainer.getRelevantEvent()).short).toBe("sgdq2022");
         })
     })
+
+    describe("runs endpoint returning 404", () => {
+        const createClient = () => {
+            const inner = new FakeHTTPClient("during-preshow");
+            const client = {
+                runs404: false,
+                get: (url, options) => client.runs404 && url.includes("/events/39/runs")
+                    ? { statusCode: 404, body: '{"detail":"Not found."}' }
+                    : inner.get(url, options),
+            };
+            return client;
+        };
+
+        test("is treated as an empty schedule for an event that never had runs", async () => {
+            const client = createClient();
+            client.runs404 = true;
+            const timeProvider = new FakeTimeProvider(new Date("2022-01-01").getTime());
+            const dataContainer = new DataContainer(console, client, timeProvider, new Twitch(client, timeProvider), () => {}, () => {});
+
+            const event = await dataContainer.getEvent(39);
+            expect(event.short).toBe("sgdq2022");
+            expect(event.runsInOrder).toEqual([]);
+        });
+
+        test("throws for an event that previously had runs", async () => {
+            const client = createClient();
+            const timeProvider = new FakeTimeProvider(new Date("2022-01-01").getTime());
+            const dataContainer = new DataContainer(console, client, timeProvider, new Twitch(client, timeProvider), () => {}, () => {});
+
+            expect((await dataContainer.getEvent(39)).runsInOrder.length).toBeGreaterThan(0);
+
+            client.runs404 = true;
+            timeProvider.passTime(10 * 1000);
+            await expect(dataContainer.getEvent(39)).rejects.toThrow("404");
+        });
+    });
 });
