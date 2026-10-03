@@ -11,10 +11,6 @@ on:
     types: [requested, completed]
   pull_request_target:
     types: [opened, synchronize, reopened, edited]
-  pull_request_review:
-    types: [submitted, edited, dismissed]
-  issue_comment:
-    types: [created, edited, deleted]
   push:
     branches: [main]
   schedule:
@@ -27,7 +23,7 @@ concurrency:
 
 permissions:
   contents: write
-  pull-requests: write
+  pull-requests: read
   checks: write
   actions: read
 
@@ -44,18 +40,6 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-      - name: Install pinned GitHub CLI with native attachments
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cli_dir="$RUNNER_TEMP/gh-2.102.0"
-          mkdir -p "$cli_dir"
-          gh release download v2.102.0 --repo cli/cli --pattern gh_2.102.0_linux_amd64.tar.gz --pattern gh_2.102.0_checksums.txt --dir "$cli_dir"
-          cd "$cli_dir"
-          sha256sum --ignore-missing -c gh_2.102.0_checksums.txt
-          tar -xzf gh_2.102.0_linux_amd64.tar.gz
-          echo "GH_BINARY=$cli_dir/gh_2.102.0_linux_amd64/bin/gh" >> "$GITHUB_ENV"
       - run: node policy-tools/tools/infrastructure-review.mjs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PLAN_IMAGE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
