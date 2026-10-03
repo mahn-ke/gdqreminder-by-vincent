@@ -2,6 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>mahn-ke/.github//renovate/default"],
   "dependencyDashboard": true,
+  "gitIgnoredAuthors": ["renovate@whitesourcesoftware.com"],
   "prHourlyLimit": 2,
   "automerge": false,
   "lockFileMaintenance": {
