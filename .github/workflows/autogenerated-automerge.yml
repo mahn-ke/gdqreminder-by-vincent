@@ -13,6 +13,7 @@ on:
 
 jobs:
   automerge:
+    if: github.repository != 'mahn-ke/gdqreminder-by-vincent'
     runs-on: ubuntu-latest
     steps:
       - id: automerge

@@ -22,4 +22,6 @@ concurrency:
 jobs:
   deploy:
     uses: mahn-ke/.github/.github/workflows/template-deploy.yml@main
+    with:
+      infrastructure_review: true
     secrets: inherit

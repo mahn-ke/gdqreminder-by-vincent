@@ -1,4 +1,10 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>mahn-ke/.github//renovate/default"]
+  "extends": ["github>mahn-ke/.github//renovate/default"],
+  "dependencyDashboard": true,
+  "automerge": false,
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["automerge", "security"]
+  }
 }
