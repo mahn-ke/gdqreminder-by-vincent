@@ -2,7 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>mahn-ke/.github//renovate/default"],
   "dependencyDashboard": true,
-  "prHourlyLimit": 10,
+  "prHourlyLimit": 2,
   "automerge": false,
   "lockFileMaintenance": {
     "enabled": true,
