@@ -9,8 +9,26 @@ There is no digest approval, plan comment, or PR-review authorization gate.
 
 Any non-empty infrastructure or service plan disables automerge, including
 creates, updates, replacements, deletes, and output-only changes. Only eligible
-same-repository Renovate PRs labelled `automerge` with both plans unchanged can
-be merged automatically by the policy tools.
+same-repository Renovate PRs authored by the `RENOVATE_TOKEN` account (`ViMaSter`),
+labelled `automerge`, with both plans unchanged can be merged automatically by
+the policy tools. The generic automerge workflow remains excluded for GDQ so it
+cannot bypass the Terraform-plan policy.
+
+## Dependabot Snapshot (2026-10-03)
+
+Captured before disabling Dependabot. All eight PRs were open and reported
+`CLEAN` after rebasing onto current `main`.
+
+| PR | Dependency update | Branch | Status |
+| --- | --- | --- | --- |
+| [#367](https://github.com/mahn-ke/gdqreminder-by-vincent/pull/367) | `@fastify/busboy` 3.0.0 to 3.2.2 | `dependabot/npm_and_yarn/app/fastify/busboy-3.2.2` | CLEAN |
+| [#366](https://github.com/mahn-ke/gdqreminder-by-vincent/pull/366) | `@grpc/grpc-js` 1.14.4 to 1.14.5 | `dependabot/npm_and_yarn/app/grpc/grpc-js-1.14.5` | CLEAN |
+| [#365](https://github.com/mahn-ke/gdqreminder-by-vincent/pull/365) | `brace-expansion` update | `dependabot/npm_and_yarn/app/multi-05c505ab13` | CLEAN |
+| [#364](https://github.com/mahn-ke/gdqreminder-by-vincent/pull/364) | `moment` 2.30.1 to 2.31.0 | `dependabot/npm_and_yarn/app/moment-2.31.0` | CLEAN |
+| [#363](https://github.com/mahn-ke/gdqreminder-by-vincent/pull/363) | `js-yaml` 3.14.2 to 3.15.2 | `dependabot/npm_and_yarn/app/js-yaml-3.15.2` | CLEAN |
+| [#362](https://github.com/mahn-ke/gdqreminder-by-vincent/pull/362) | `got` 15.1.0 to 16.0.0 | `dependabot/npm_and_yarn/got-16.0.0` | CLEAN |
+| [#361](https://github.com/mahn-ke/gdqreminder-by-vincent/pull/361) | `qs` 6.15.2 to 6.16.0 | `dependabot/npm_and_yarn/app/qs-6.16.0` | CLEAN |
+| [#360](https://github.com/mahn-ke/gdqreminder-by-vincent/pull/360) | `browserslist` 4.25.0 to 4.28.8 | `dependabot/npm_and_yarn/app/browserslist-4.28.8` | CLEAN |
 
 ## Publication Order
 
@@ -35,10 +53,13 @@ be merged automatically by the policy tools.
    but never automerge. Inspect the sanitized PNG artifacts, then verify on a
    controlled main run that apply waits for `ViMaSter` approval. These live
    checks remain pending until the main agent executes and inspects them.
-5. Run the GDQ Renovate dry run and inspect its logs. Confirm the shared preset,
-   `app/package.json`, lockfile, Docker images, Actions, and provider updates are
-   discovered and Terraform is available to permitted post-upgrade commands in
-   the runner container. Disable dry run only after this unresolved check passes.
+5. Publish `.github/renovate-entrypoint.sh` and the central workflow update. The
+   entrypoint installs pinned Terraform `1.16.5` inside the Renovate container;
+   setting it up on the Actions host is insufficient because post-upgrade tasks
+   run inside Renovate's container. Run the GDQ Renovate dry run and inspect its
+   logs. Confirm the shared preset, `app/package.json`, lockfile, Docker images,
+   Actions, and provider updates are discovered and Terraform lockfile updates
+   complete. Disable dry run only after this live check passes.
 6. Once Renovate replacement updates cover the existing security fixes, remove
    `.github/dependabot.yml` and `.github/workflows/autoupdate.yml`, and disable
    Dependabot security-update PRs in repository settings. Keep vulnerability
@@ -96,7 +117,8 @@ these binary artifacts; PR runs do not upload them.
 
 ## Diagnostics and Validation
 
-Existing Dependabot PRs fail because their PostgreSQL secrets are empty. Do not
+Earlier Dependabot PR runs failed because their PostgreSQL secrets were empty;
+the currently open Dependabot PRs pass required checks after rebasing. Do not
 copy production credentials into Dependabot secrets or execute PR code using
 `pull_request_target`. The Renovate migration avoids Dependabot's restricted
 secret context; provider/backend credentials remain an Actions-level requirement.
