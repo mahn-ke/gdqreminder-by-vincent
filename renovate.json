@@ -2,7 +2,12 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>mahn-ke/.github//renovate/default"],
   "dependencyDashboard": true,
+  "prHourlyLimit": 10,
   "automerge": false,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["at any time"]
+  },
   "vulnerabilityAlerts": {
     "enabled": true,
     "labels": ["automerge", "security"]
