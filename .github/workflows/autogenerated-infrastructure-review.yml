@@ -58,4 +58,4 @@ jobs:
       - run: node policy-tools/tools/infrastructure-review.mjs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PLAN_IMAGE_TOKEN: ${{ secrets.PLAN_IMAGE_TOKEN }}
+          PLAN_IMAGE_TOKEN: ${{ secrets.RENOVATE_TOKEN }}

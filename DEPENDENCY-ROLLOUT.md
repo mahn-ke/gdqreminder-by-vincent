@@ -11,12 +11,14 @@ updates, replacements, deletes, and output-only changes.
    deployment workflow, and policy/reporting helpers. Keep the Renovate schedule
    disabled until the GDQ policy is active. Manual Renovate dispatch defaults to
    a GDQ-only full dry run.
-2. Add a GDQ Actions secret named `PLAN_IMAGE_TOKEN`. Native GitHub image
+2. Make the existing organization Actions secret `RENOVATE_TOKEN` available to
+   GDQ. The publisher maps it to the internal `PLAN_IMAGE_TOKEN` environment
+   variable; a separate secret is not required. Native GitHub image
    attachments require an OAuth token or PAT with repository write access;
    `GITHUB_TOKEN` and GitHub App installation tokens cannot upload attachments.
-   Prefer a fine-grained PAT restricted to GDQ with the minimum contents and
-   issue/pull-request access needed by `gh pr comment --attach`. Do not grant
-   administration, do not use the Renovate admin token, and never commit it.
+   The existing fine-grained user PAT has passed a native upload smoke test.
+   Reusing it shares a credential with Renovate; keep its repository access and
+   permissions as narrow as both workflows permit, and never commit its value.
 3. Publish the GDQ generated deployment and policy wrappers, then reconcile the
    `repos` Terraform generator. Its GDQ-only ruleset adds `Infrastructure review`,
    removes admin bypasses, and disables GitHub native auto-merge. The policy
@@ -104,6 +106,7 @@ binary plans, output values, and interactive HTML are never uploaded to PRs.
 String instance keys are hashed before publication. Resource and module names
 remain visible, as they already are in this public repository's Terraform code.
 
-Native upload failures keep the review gate blocked. `PLAN_IMAGE_TOKEN` is used
+Native upload failures keep the review gate blocked. `secrets.RENOVATE_TOKEN`
+is passed as `PLAN_IMAGE_TOKEN` and is used
 only to upload PNGs through a temporary comment; the final marked comment,
 required check, and eligible no-change merge use the non-bypass Actions token.
