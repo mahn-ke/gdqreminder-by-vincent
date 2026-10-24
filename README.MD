@@ -1,5 +1,14 @@
 # Backend for [GDQReminder App](https://github.com/mahn-ke/gdqreminder-mobile/) [![codecov](https://codecov.io/gh/mahn-ke/gdqreminder-by-vincent/branch/main/graph/badge.svg?token=0CRSIRXAS1)](https://codecov.io/gh/mahn-ke/gdqreminder-by-vincent)
 
+## Hetzner2 deployment
+
+The shared deployment workflow builds `docker-bake.hcl` and publishes
+`ghcr.io/mahn-ke/gdqreminder-by-vincent/nginx:latest` before running Compose.
+The OpenResty image contains `nginx/nginx.conf`; no runner checkout is mounted
+at runtime. The NGINX cache remains in its named volume.
+Deploy once after this change to recreate the container without the old mount.
+For local builds, run `docker buildx bake --file docker-bake.hcl --load`.
+
 # Quickstart using Docker
 1. Create a new folder (this README will refer to this folder as `$ROOT`)
 2. Visit `Settings` -> [`Service Accounts`](https://console.firebase.google.com/project/_/settings/serviceaccounts/adminsdk) of your firebase project

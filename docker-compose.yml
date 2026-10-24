@@ -24,12 +24,11 @@ services:
       - SEQ_API_KEY=${SEQ_API_KEY}
 
   nginx:
-    image: openresty/openresty:alpine
+    image: ghcr.io/mahn-ke/gdqreminder-by-vincent/nginx:latest
     restart: on-failure:5
     ports:
       - "3018:80"
     volumes:
-      - ./nginx/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
       - nginx_cache:/var/cache/nginx/tracker
     depends_on:
       - app
