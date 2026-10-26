@@ -9,7 +9,7 @@ x-nginx:
 
 services:
   app:
-    image: ghcr.io/mahn-ke/gdqreminder-by-vincent:latest@sha256:727c7fd7369a76bcdfb71035e1bcb18b21b9b91696bced0001cf601f691b6909
+    image: ghcr.io/mahn-ke/gdqreminder-by-vincent:latest@sha256:bbdef98b6b40eba983f30d11c951d51c8f7a3927b9ee857bf69a38fd8be850b0
     restart: on-failure:5
     command:
       - --refreshIntervalInMS=60000
@@ -24,12 +24,11 @@ services:
       - SEQ_API_KEY=${SEQ_API_KEY}
 
   nginx:
-    image: openresty/openresty:alpine
+    image: ghcr.io/mahn-ke/gdqreminder-by-vincent/nginx:latest
     restart: on-failure:5
     ports:
       - "3018:80"
     volumes:
-      - ./nginx/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf:ro
       - nginx_cache:/var/cache/nginx/tracker
     depends_on:
       - app
