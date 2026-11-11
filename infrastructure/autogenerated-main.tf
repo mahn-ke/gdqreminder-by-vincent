@@ -24,7 +24,7 @@ terraform {
     }
     uptimekuma = {
       source  = "breml/uptimekuma"
-      version = "~> 0.3"
+      version = "~> 0.5"
     }
     random = {
       source  = "hashicorp/random"
