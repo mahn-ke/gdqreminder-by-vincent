@@ -42,6 +42,11 @@ describe("twitch", () => {
         });
     });
 
+    it("returns false, if the stream is offline, even if the offline title contains the specified string", async () => {
+        const offline = new Twitch(new FakeHTTPClient("twitch-offline"), new RealTimeProvider(), "", null, new ApiProxyMetricsServer());
+        expect(await offline.isSubstringOfGameNameOrStreamTitle("Juneteenth")).toBe(false);
+    });
+
     [
         {
             testName: "returns false, if the stream is offline",
