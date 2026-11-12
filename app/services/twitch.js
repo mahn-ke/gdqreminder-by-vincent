@@ -62,6 +62,10 @@ export class Twitch {
 
     async isSubstringOfGameNameOrStreamTitle(substring) {
         const response = await this.fetchTitle();
+        // broadcastSettings.title persists while offline (e.g. pre-announcing the next event), so only trust live data
+        if (!response[0].data.user.stream) {
+            return false;
+        }
         const streamName = response[0].data.user.broadcastSettings.title.toLowerCase();
         if (streamName.includes(substring.toLowerCase())) {
             return true;

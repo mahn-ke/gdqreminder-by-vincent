@@ -344,7 +344,12 @@ export class DataContainer
       return;
     }
 
-    if (monitoredRun.id == this.#data.events[monitoredRun.eventID].runsInOrder[0].id)
+    // only trust twitch data once the run before the monitored one has started;
+    // this also covers the first run of an event (no previous run) and runs that become
+    // non-first because a run (e.g. a kickoff) got added in front of them before the event started
+    const runsInOrder = this.#data.events[monitoredRun.eventID].runsInOrder;
+    const previousRun = runsInOrder[runsInOrder.findIndex(run => run.id == monitoredRun.id) - 1];
+    if (!previousRun || new Date(previousRun.startTime) > this.#timeProvider.getCurrent())
     {
       return;
     }
