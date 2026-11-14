@@ -1,5 +1,1 @@
-{
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>mahn-ke/.github//renovate/default"],
-  "dependencyDashboard": true
-}
+{"$schema":"https://docs.renovatebot.com/renovate-schema.json","automerge":false,"dependencyDashboard":true,"extends":["github\u003emahn-ke/.github//renovate/default"],"vulnerabilityAlerts":{"enabled":true,"labels":["automerge","security"]}}

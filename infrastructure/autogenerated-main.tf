@@ -12,11 +12,11 @@ terraform {
     }
     keycloak = {
       source  = "keycloak/keycloak"
-      version = "5.4.0"
+      version = "5.10.0"
     }
     github = {
       source  = "integrations/github"
-      version = "~> 6.6.0"
+      version = "~> 6.13.0"
     }
     gotify = {
       source  = "LukasKnuth/gotify"
@@ -24,7 +24,7 @@ terraform {
     }
     uptimekuma = {
       source  = "breml/uptimekuma"
-      version = "~> 0.3"
+      version = "~> 0.5"
     }
     random = {
       source  = "hashicorp/random"

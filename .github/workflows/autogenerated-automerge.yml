@@ -5,6 +5,15 @@
 name: Integrate `automerge` branches using rebase
 on:
   workflow_dispatch:
+    inputs:
+      pull_request:
+        description: Pull request number to update and merge
+        required: true
+        type: string
+  pull_request:
+    types: [labeled, unlabeled, synchronize, ready_for_review]
+  schedule:
+    - cron: '43 * * * *'
   workflow_run:
     workflows:
      - Deploy service, generate certificates, and update NGINX configuration
@@ -21,7 +30,9 @@ jobs:
         uses: "pascalgn/automerge-action@v0.16.4"
         env:
           GITHUB_TOKEN: ${{ secrets.RENOVATE_TOKEN }}
+          PULL_REQUEST: ${{ inputs.pull_request || '' }}
           MERGE_LABELS: "automerge"
+          MERGE_READY_STATE: "clean"
           MERGE_METHOD: "rebase"
           UPDATE_METHOD: "rebase"
           UPDATE_RETRIES : 10
