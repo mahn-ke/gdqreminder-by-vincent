@@ -83,9 +83,9 @@ const startup = async (logger, config) => {
     logger.info("[EMISSION] event announced: " + event.id);
     firebase.sendEventAnnouncementNotification(event);
   };
-  const onNewRunAdded = (run) => {
+  const onNewRunAdded = (run, event) => {
     logger.info("[EMISSION] new run added: {display_name} ({id}) from {startTime} to {endTime}", run);
-    firebase.sendRunAddedNotification(run);
+    firebase.sendRunAddedNotification(run, event);
   };
 
   const metricsProvider = new ApiProxyMetricsServer(logger, 9000);
