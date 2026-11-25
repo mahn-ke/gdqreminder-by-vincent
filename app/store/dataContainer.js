@@ -96,7 +96,7 @@ export class DataContainer
       newRunIDs.forEach(id => {
       if (!this.#data.events[eventID].runsInOrder.some(run => run.id === id)) {
         if (runsWithEventIDById[id].display_name) {
-          this.#onNewRunAdded(runsWithEventIDById[id]);
+          this.#onNewRunAdded(runsWithEventIDById[id], this.#data.events[eventID]);
         }
       }
       });

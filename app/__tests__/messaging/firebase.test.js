@@ -64,6 +64,58 @@ describe('Firebase.sendRunAddedNotification', () => {
   });
 });
 
+describe('Firebase.sendRunAddedNotification targeting', () => {
+  beforeEach(() => {
+    sendMock.mockClear();
+  });
+
+  const run = { id: 7738, display_name: 'EarthBound Beginnings', startTime: '2026-07-09T02:07:00.000Z' };
+
+  it('targets the generic and the event-specific schedule update topic with one condition', async () => {
+    const firebase = new Firebase({ info: jest.fn(), error: jest.fn() });
+
+    firebase.sendRunAddedNotification(run, { short: 'AGDQ2027' });
+    await Promise.resolve();
+
+    const sentMessage = sendMock.mock.calls[0][0];
+    expect(sentMessage.condition).toBe("'event.update' in topics || 'event.update.agdq2027' in topics");
+    expect(sentMessage.topic).toBeUndefined();
+    expect(sentMessage.notification.title).toBe('New AGDQ2027 run added: EarthBound Beginnings!');
+    expect(sentMessage.data).toEqual({ event: 'event.update', pk: '7738', short: 'agdq2027' });
+  });
+
+  it('falls back to the generic topic and title without an event short', async () => {
+    const firebase = new Firebase({ info: jest.fn(), error: jest.fn() });
+
+    firebase.sendRunAddedNotification(run);
+    await Promise.resolve();
+
+    const sentMessage = sendMock.mock.calls[0][0];
+    expect(sentMessage.topic).toBe('event.update');
+    expect(sentMessage.condition).toBeUndefined();
+    expect(sentMessage.notification.title).toBe('New GDQ run added: EarthBound Beginnings!');
+    expect(sentMessage.data).toEqual({ event: 'event.update', pk: '7738' });
+  });
+});
+
+describe('Firebase.sendEventAnnouncementNotification', () => {
+  beforeEach(() => {
+    sendMock.mockClear();
+  });
+
+  it('sends to the topic the "Schedule announcements" setting subscribes to', async () => {
+    const firebase = new Firebase({ info: jest.fn(), error: jest.fn() });
+
+    firebase.sendEventAnnouncementNotification({ short: 'sgdq2027' });
+    await Promise.resolve();
+
+    const sentMessage = sendMock.mock.calls[0][0];
+    expect(sentMessage.topic).toBe('event.announcement');
+    expect(sentMessage.data.event).toBe('event.announcement');
+    expect(sentMessage.notification.title).toBe('New GDQ event announced: SGDQ2027!');
+  });
+});
+
 describe('Firebase.validateConnection', () => {
   const credentialsPath = '/firebase/firebase.json';
 

@@ -40,6 +40,7 @@ describe("dataContainer", () => {
             expect(emissionMethod.mock.calls[0][0].name).toBe("New Run");
             expect(emissionMethod.mock.calls[0][0].startTime).toStrictEqual(new Date("2022-01-09T17:53:00Z"));
             expect(emissionMethod.mock.calls[0][0].endTime).toStrictEqual(new Date("2022-01-09T18:53:00Z"));
+            expect(emissionMethod.mock.calls[0][1].short).toBe("agdq2022");
 
             fakeTimeProvider.setTime(new Date(timeC));
             await dataContainer.checkFor10MinuteWarning();

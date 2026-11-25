@@ -56,8 +56,16 @@ export default class Firebase {
                 this.#logger.error("[FIREBASE] Error sending message for run {id} ({name}): {error}", {...logData, error});
             });
     }
-    sendRunAddedNotification(run) {
-        const topic = `event.announcement`;
+    // old app versions subscribe to the generic `event.update` topic for all events,
+    // newer ones only to `event.update.<short>` for events they have run reminders for;
+    // a condition delivers once per device, even if it's subscribed to both
+    sendRunAddedNotification(run, event) {
+        const topic = `event.update`;
+        const short = event?.short?.toLowerCase();
+        const target = short
+            ? { condition: `'${topic}' in topics || '${topic}.${short}' in topics` }
+            : { topic };
+        const eventName = short ? short.toUpperCase() : 'GDQ';
 
         const now = new Date();
         const runStart = run.startTime ?? run.start;
@@ -81,7 +89,7 @@ export default class Firebase {
 
         const firebaseMessage = {
             notification: {
-                title: `New GDQ run added: ${run.display_name}!`,
+                title: `New ${eventName} run added: ${run.display_name}!`,
                 body,
             },
             android: {
@@ -93,8 +101,9 @@ export default class Firebase {
             data: {
                 event: topic,
                 pk: run.id.toString(),
+                ...(short ? { short } : {}),
             },
-            topic: topic
+            ...target
         };
 
         let logData = {firebaseMessage, id: run.id, display_name: run.display_name};
@@ -109,7 +118,7 @@ export default class Firebase {
             });
     }
     sendEventAnnouncementNotification(event) {
-        const topic = `event.update`;
+        const topic = `event.announcement`;
 
         const firebaseMessage = {
             notification: {
