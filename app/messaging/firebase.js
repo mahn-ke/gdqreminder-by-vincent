@@ -61,7 +61,9 @@ export default class Firebase {
     // a condition delivers once per device, even if it's subscribed to both
     sendRunAddedNotification(run, event) {
         const topic = `event.update`;
-        const short = event?.short?.toLowerCase();
+        // anything outside FCM's topic charset would invalidate the whole condition
+        const lowercaseShort = event?.short?.toLowerCase();
+        const short = /^[a-z0-9_.~%-]+$/.test(lowercaseShort ?? '') ? lowercaseShort : undefined;
         const target = short
             ? { condition: `'${topic}' in topics || '${topic}.${short}' in topics` }
             : { topic };

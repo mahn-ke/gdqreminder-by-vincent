@@ -98,6 +98,26 @@ describe('Firebase.sendRunAddedNotification targeting', () => {
   });
 });
 
+describe('Firebase.sendRunAddedNotification with an invalid event short', () => {
+  beforeEach(() => {
+    sendMock.mockClear();
+  });
+
+  it('falls back to the generic topic instead of sending an invalid condition', async () => {
+    const firebase = new Firebase({ info: jest.fn(), error: jest.fn() });
+
+    firebase.sendRunAddedNotification(
+      { id: 1, display_name: 'Some Run', startTime: '2026-07-09T02:07:00.000Z' },
+      { short: "gdq express '26" },
+    );
+    await Promise.resolve();
+
+    const sentMessage = sendMock.mock.calls[0][0];
+    expect(sentMessage.topic).toBe('event.update');
+    expect(sentMessage.condition).toBeUndefined();
+  });
+});
+
 describe('Firebase.sendEventAnnouncementNotification', () => {
   beforeEach(() => {
     sendMock.mockClear();
